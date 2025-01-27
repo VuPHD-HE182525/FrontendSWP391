@@ -22,6 +22,14 @@ body {
     margin: auto;
 }
 
+.btn-org {
+    background: #0066ff !important;
+    color: #fff !important;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 7px 20px !important;
+}
+
 .link:hover {
     color: #0066ff;
 }
@@ -36,4 +44,18 @@ nav ul button {
 
 nav ul button:hover {
     background: none !important;
+}
+
+footer from input::placeholder {
+    font-size: 14px;
+}
+
+.css-imrjgg-MuiButtonBase-root-MuiCheckbox-root.Mui-checked,
+.css-imrjgg-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
+    color: #0066ff !important;
+}
+
+.MuiFormControlLabel-label {
+    font-size: 13px !important;
+    color: rgba(0, 0, 0, 0.8);
 }
