@@ -14,7 +14,7 @@ export default function Spin({ className }) {
         <div role="status" className={`text-center p-5 ${className}`} style={spinStyle}>
             <svg
                 aria-hidden="true"
-                className="w-12 h-12 inline text-gray-200 animate-spin dark:text-gray-600 fill-blue-900 dark:fill-gray-300"
+                className="w-12 h-12 inline text-gray-200 animate-spin dark:text-gray-400 !fill-[#0066ff] dark:fill-gray-300"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
