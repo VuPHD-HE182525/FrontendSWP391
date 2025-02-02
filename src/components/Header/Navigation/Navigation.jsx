@@ -21,7 +21,7 @@ export default function Navigation() {
             <nav className="py-2">
                 <div className="container flex items-center justify-end gap-8">
                     <div className="col_1 w-[20%]">
-                        <Button className="!text-black gap-2 w-full !font-[700] " onClick={openCategoryPanel}>
+                        <Button className="!text-black gap-2 w-full !font-[700] " onClick={ openCategoryPanel }>
                             <IoMenu className="text-[18px]" />
                             CATEGORIES
                             <LiaAngleRightSolid className="text-[16px] ml-auto !font-bold" />
@@ -32,14 +32,14 @@ export default function Navigation() {
                         <ul className="flex items-center gap-3 nav">
                             <li className="list-none">
                                 <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#0066ff]">
+                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
                                         Home
                                     </Button>
                                 </Link>
                             </li>
                             <li className="list-none relative">
                                 <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#0066ff]">
+                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
                                         Laptop
                                     </Button>
                                 </Link>
@@ -48,7 +48,7 @@ export default function Navigation() {
                                     <ul>
                                         <li className="list-none w-full relative">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Thương hiệu
                                                 </Button>
 
@@ -56,14 +56,14 @@ export default function Navigation() {
                                                     <ul>
                                                         <li className="list-none w-full">
                                                             <Link to="/" className="w-full">
-                                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                     ASUS
                                                                 </Button>
                                                             </Link>
                                                         </li>
                                                         <li className="list-none w-full">
                                                             <Link to="/" className="w-full">
-                                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                     ACER
                                                                 </Button>
                                                             </Link>
@@ -71,7 +71,7 @@ export default function Navigation() {
 
                                                         <li className="list-none w-full">
                                                             <Link to="/" className="w-full">
-                                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                     MSI
                                                                 </Button>
                                                             </Link>
@@ -79,7 +79,7 @@ export default function Navigation() {
 
                                                         <li className="list-none w-full">
                                                             <Link to="/" className="w-full">
-                                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                     LENOVO
                                                                 </Button>
                                                             </Link>
@@ -87,7 +87,7 @@ export default function Navigation() {
 
                                                         <li className="list-none w-full">
                                                             <Link to="/" className="w-full">
-                                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                     DELL
                                                                 </Button>
                                                             </Link>
@@ -95,7 +95,7 @@ export default function Navigation() {
 
                                                         <li className="list-none w-full">
                                                             <Link to="/" className="w-full">
-                                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                     HP - Pavillion
                                                                 </Button>
                                                             </Link>
@@ -103,7 +103,7 @@ export default function Navigation() {
 
                                                         <li className="list-none w-full">
                                                             <Link to="/" className="w-full">
-                                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                     LG - Gram
                                                                 </Button>
                                                             </Link>
@@ -114,7 +114,7 @@ export default function Navigation() {
                                         </li>
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Giá bán
                                                 </Button>
                                             </Link>
@@ -122,7 +122,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     CPU Intel - AMD
                                                 </Button>
                                             </Link>
@@ -130,7 +130,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Nhu cầu sử dụng
                                                 </Button>
                                             </Link>
@@ -138,7 +138,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Link kiện laptop
                                                 </Button>
                                             </Link>
@@ -146,7 +146,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Laptop ASUS
                                                 </Button>
                                             </Link>
@@ -154,7 +154,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Latop ACER
                                                 </Button>
                                             </Link>
@@ -162,7 +162,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Latop MSI
                                                 </Button>
                                             </Link>
@@ -170,7 +170,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Latop LENOVO
                                                 </Button>
                                             </Link>
@@ -178,7 +178,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Latop DELL
                                                 </Button>
                                             </Link>
@@ -186,7 +186,7 @@ export default function Navigation() {
 
                                         <li className="list-none w-full">
                                             <Link to="/" className="w-full">
-                                                <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
+                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                     Latop AI
                                                 </Button>
                                             </Link>
@@ -196,21 +196,21 @@ export default function Navigation() {
                             </li>
                             <li className="list-none">
                                 <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#0066ff]">
+                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
                                         New Arrivals
                                     </Button>
                                 </Link>
                             </li>
                             <li className="list-none">
                                 <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#0066ff]">
+                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
                                         All Brands
                                     </Button>
                                 </Link>
                             </li>
                             <li className="list-none">
                                 <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#0066ff]">
+                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
                                         More
                                     </Button>
                                 </Link>
@@ -228,9 +228,9 @@ export default function Navigation() {
             </nav>
 
             <CategoryPanel
-                openCategoryPanel={openCategoryPanel}
-                isOpenCategoryPanel={isOpenCategoryPanel}
-                setOpenCategoryPanel={setOpenCategoryPanel}
+                openCategoryPanel={ openCategoryPanel }
+                isOpenCategoryPanel={ isOpenCategoryPanel }
+                setOpenCategoryPanel={ setOpenCategoryPanel }
             />
         </>
     );

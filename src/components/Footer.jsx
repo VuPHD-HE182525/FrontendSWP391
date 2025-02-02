@@ -10,7 +10,7 @@ import { FaGithub } from "react-icons/fa";
 export default function Footer() {
   return (
     <>
-      <footer className="py-6 bg-white border-1 border-gray-250">
+      <footer className="py-6 bg-white border-1 border-gray-300">
         <div className="container">
           <div className="flex items-center justify-center gap-2 py-8 pb-8">
             <div className="col flex items-center justify-center flex-col group w-[15%]">
@@ -48,7 +48,7 @@ export default function Footer() {
           <hr />
 
           <div className="footer flex py-8">
-            <div className="part1 w-[25%] border-r border-gray-250">
+            <div className="part1 w-[25%] border-r border-gray-300">
               <h2 className="text-[18px] font-[600] mb-4">Contact Us</h2>
               <p className="text-[13px] font-[400] pb-4">
                 Shopping Online - SWP391 Project - Group 1
