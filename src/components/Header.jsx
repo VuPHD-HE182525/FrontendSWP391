@@ -23,7 +23,7 @@ export default function Header() {
     return (
         <>
             <header className="bg-white">
-                <div className="top-strip py-2 border-t-[1px] border-b-[1px] border-gray-250">
+                <div className="top-strip py-2 border-t-[1px] border-b-[1px] border-gray-300">
                     <div className="container">
                         <div className="flex items-center justify-between">
                             <div className="col1 w-[50%]">
@@ -41,10 +41,10 @@ export default function Header() {
                     </div>
                 </div>
 
-                <div className="header py-4 border-b-[1px] border-gray-250">
+                <div className="header py-4 border-b-[1px] border-gray-300">
                     <div className="container flex items-center justify-between">
                         <div className="col1 w-[25%]">
-                            <Link to={"/"}>
+                            <Link to={ "/" }>
                                 <img src="/fptshoplogo.png" />
                             </Link>
                         </div>
@@ -68,7 +68,7 @@ export default function Header() {
                                     <Tooltip title="Cart">
                                         <IconButton aria-label="cart">
                                             <StyledBadge
-                                                badgeContent={4} color="secondary">
+                                                badgeContent={ 4 } color="secondary">
                                                 <MdOutlineShoppingCart />
                                             </StyledBadge>
                                         </IconButton>
@@ -78,7 +78,7 @@ export default function Header() {
                                 <li>
                                     <Tooltip title="Wish List">
                                         <IconButton aria-label="wish-list">
-                                            <StyledBadge badgeContent={4} color="secondary">
+                                            <StyledBadge badgeContent={ 4 } color="secondary">
                                                 <IoMdHeartEmpty />
                                             </StyledBadge>
                                         </IconButton>
