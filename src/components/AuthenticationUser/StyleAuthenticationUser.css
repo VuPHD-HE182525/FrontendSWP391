@@ -1,0 +1,30 @@
+
+.footer{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+.m-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .main-content {
+    flex: 3;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .sidebar {
+    flex: 1;
+    max-width: 25%;
+    min-width: 250px;
+  }
+  
