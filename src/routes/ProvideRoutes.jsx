@@ -4,16 +4,25 @@ import { lazy } from "react";
 const Layout = lazy(() => import("../layouts/Layout"));
 const HomePage = lazy(() => import("../layouts/HomePage"));
 const ErrorPage404 = lazy(() => import("../components/ErrorPage404"));
+const Login = lazy(() => import("../components/AuthenticationUser/Login"));
+const Register = lazy(() => import("../components/AuthenticationUser/Register"));
+const Verify = lazy(() => import("../components/AuthenticationUser/Verify"));
+const PersonalInfo = lazy(() => import("../components/UserProfile/PersonalInfo"));
+  
 
-
-const router = (dataNavbar) => createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { path: "/", element: <HomePage /> },
-      { path: "*", element: <ErrorPage404 /> },
-    ]
-  }
-]);
+const router = (dataNavbar) =>
+  createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        { path: "/", element: <HomePage /> },
+        { path: "*", element: <ErrorPage404 /> },
+        { path: "/login", element: <Login /> },
+        { path: "/register", element: <Register /> },
+        { path: "/verify", element: <Verify /> },
+        { path: "/profile/info", element: <PersonalInfo /> },
+      ],
+    },
+  ]);
 export default router;

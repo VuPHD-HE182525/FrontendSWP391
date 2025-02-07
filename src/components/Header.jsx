@@ -89,7 +89,9 @@ export default function Header() {
                                     <Tooltip title="Profile">
                                         <IconButton aria-label="profile">
                                             <StyledBadge color="secondary">
-                                                <CgProfile />
+                                                <Link to="/profile/info">
+                                                    <CgProfile />
+                                                </Link>
                                             </StyledBadge>
                                         </IconButton>
                                     </Tooltip >
