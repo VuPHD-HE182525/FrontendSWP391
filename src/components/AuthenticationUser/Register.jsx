@@ -209,45 +209,6 @@ const Register = () => {
 
             <div className="form-group w-full mb-5">
               <FormLabel id="demo-row-radio-buttons-group-label">
-                BirthDate *
-              </FormLabel>
-              <TextField
-                type="date"
-                id="birthdate"
-                label=""
-                variant="outlined"
-                className="w-full"
-                name="birthdate"
-              />
-            </div>
-
-            <div className="form-group w-full mb-5">
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Gender *
-              </FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-                defaultValue="none"
-              >
-                <FormControlLabel
-                  value="female"
-                  control={<Radio />}
-                  label="Female"
-                  name="gender"
-                />
-                <FormControlLabel
-                  value="male"
-                  control={<Radio />}
-                  label="Male"
-                  name="gender"
-                />
-              </RadioGroup>
-            </div>
-
-            <div className="form-group w-full mb-5">
-              <FormLabel id="demo-row-radio-buttons-group-label">
                 Address *
               </FormLabel>
               <TextField
