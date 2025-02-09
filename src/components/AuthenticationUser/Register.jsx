@@ -209,32 +209,6 @@ const Register = () => {
 
             <div className="form-group w-full mb-5">
               <FormLabel id="demo-row-radio-buttons-group-label">
-                Address *
-              </FormLabel>
-              <TextField
-                type="text"
-                id="address"
-                variant="outlined"
-                className="w-full"
-                name="address"
-              />
-            </div>
-
-            <div className="form-group w-full mb-5">
-              <FormLabel id="demo-row-radio-buttons-group-label">
-                Phone Number *
-              </FormLabel>
-              <TextField
-                type="text"
-                id="phonenumber"
-                variant="outlined"
-                className="w-full"
-                name="phonenumber"
-              />
-            </div>
-
-            <div className="form-group w-full mb-5">
-              <FormLabel id="demo-row-radio-buttons-group-label">
                 Email *
               </FormLabel>
               <TextField
