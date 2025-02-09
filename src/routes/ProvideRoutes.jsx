@@ -8,6 +8,9 @@ const Login = lazy(() => import("../components/AuthenticationUser/Login"));
 const Register = lazy(() => import("../components/AuthenticationUser/Register"));
 const Verify = lazy(() => import("../components/AuthenticationUser/Verify"));
 const PersonalInfo = lazy(() => import("../components/UserProfile/PersonalInfo"));
+// Thêm hai component mới
+const ProductList = lazy(() => import("../components/Product/ProductList"));
+const ProductDetails = lazy(() => import("../components/Product/ProductDetails"));
   
 
 const router = (dataNavbar) =>
@@ -17,6 +20,8 @@ const router = (dataNavbar) =>
       element: <Layout />,
       children: [
         { path: "/", element: <HomePage /> },
+        { path: "/products", element: <ProductList /> }, // Trang danh sách sản phẩm
+        { path: "/product/:id", element: <ProductDetails /> }, // Trang chi tiết sản phẩm
         { path: "*", element: <ErrorPage404 /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
