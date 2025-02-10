@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search/Search"
 import Badge from '@mui/material/Badge';
@@ -20,6 +20,25 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export default function Header() {
+    const [cartItemCount, setCartItemCount] = useState(0);
+
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const response = await axios.get("/api/cart", {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                setCartItemCount(response.data.length); // Update the cart item count
+            } catch (error) {
+                console.error("Error fetching cart items:", error);
+            }
+        };
+
+        fetchCartItems(); // Fetch cart items on component mount
+    },);
+
     return (
         <>
             <header className="bg-white">
@@ -68,8 +87,10 @@ export default function Header() {
                                     <Tooltip title="Cart">
                                         <IconButton aria-label="cart">
                                             <StyledBadge
-                                                badgeContent={ 4 } color="secondary">
-                                                <MdOutlineShoppingCart />
+                                                badgeContent={cartItemCount} color="secondary">
+                                                <Link to="/cart"> {/* Link to /cart */}
+                                                    <MdOutlineShoppingCart />
+                                                </Link>
                                             </StyledBadge>
                                         </IconButton>
                                     </Tooltip >

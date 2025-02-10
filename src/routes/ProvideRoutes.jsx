@@ -11,6 +11,8 @@ const PersonalInfo = lazy(() => import("../components/UserProfile/PersonalInfo")
 // Thêm hai component mới
 const ProductList = lazy(() => import("../components/Product/ProductList"));
 const ProductDetails = lazy(() => import("../components/Product/ProductDetails"));
+// Cart component
+const Cart = lazy(() => import("../components/Cart/CartDetails"));
   
 
 const router = (dataNavbar) =>
@@ -27,6 +29,7 @@ const router = (dataNavbar) =>
         { path: "/register", element: <Register /> },
         { path: "/verify", element: <Verify /> },
         { path: "/profile/info", element: <PersonalInfo /> },
+        { path: "/cart", element: <Cart />},
       ],
     },
   ]);
