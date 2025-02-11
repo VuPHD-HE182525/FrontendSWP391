@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./StyleAuthenticationUser.css";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Rating from "@mui/material/Rating";
+import axios from "axios";
 
 const Login = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -13,7 +14,43 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
   const history = useNavigate();
+
+  const handleChange = (e) => {
+    setFormFields({
+      ...formFields,
+      [e.target.name]: e.target.value
+    })
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); 
+
+    try {
+      const response = await axios.post("/api/user/login", formFields);
+        
+        if (response.status === 200) {
+            const { token, role } = response.data;
+
+            // Lưu token vào localStorage
+            localStorage.setItem("token", token);
+
+            // Điều hướng dựa trên role
+            if (role === "Admin") {
+                history("*");
+                alert("Login failed!");
+            } else {
+                history("/");
+            }
+
+            alert("Login successful!");
+        }
+    } catch (error) {
+      console.error("Error: ",error);
+      setErrorMessage("Invalid email or password. Please try again.");
+    }
+  };
   const forgotPassword = () => {
     if (formFields.email !== "") {
       /* empty */
@@ -200,7 +237,7 @@ const Login = () => {
           <h1 className="text-left text-[30px] text-black mb-10 font-extrabold">
             Login to your account
           </h1>
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleLogin}>
             <div className="form-group w-full mb-5">
               <TextField
                 type="email"
@@ -209,6 +246,8 @@ const Login = () => {
                 variant="outlined"
                 className="w-full"
                 name="email"
+                value={formFields.email}
+                onChange={handleChange}
               />
             </div>
 
@@ -220,6 +259,8 @@ const Login = () => {
                 variant="outlined"
                 className="w-full"
                 name="password"
+                value={formFields.password}
+                onChange={handleChange}
               />
               <Button
                 className="!absolute  top-[10px] right-[10px] z-50 
