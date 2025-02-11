@@ -47,7 +47,6 @@ function CartCompletion() {
 
     return (
         <div>
-            <Header />
             <div className="cart-completion container mx-auto mt-10">
                 <h2 className="text-2xl font-bold mb-5">Order Confirmation</h2>
                 <p className="mb-4">
@@ -106,7 +105,6 @@ function CartCompletion() {
                     Continue Shopping
                 </button>
             </div>
-            <Footer />
         </div>
     );
 }
