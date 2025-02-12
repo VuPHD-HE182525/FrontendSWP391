@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import { ImProfile } from "react-icons/im";
 import { GiPositionMarker } from "react-icons/gi";
@@ -10,8 +10,25 @@ import { TbLockPassword } from "react-icons/tb";
 import { LuLogOut } from "react-icons/lu";
 import "./StyleUserProfile.css";
 import { Button } from "@mui/material";
+import axios from "axios";
 
 const PersonalInfo = () => {
+  const history = useNavigate();
+
+  const handleLogout = async(e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.get("http://localhost:8000/api/user/logout", { withCredentials: true });
+      if(response.status(200) === 200) {
+        alert("Logout successfully")
+        history("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <section className="section py-10">
       <nav className="breadcrumb">
@@ -73,10 +90,10 @@ const PersonalInfo = () => {
               <TbLockPassword />
               <p className="pl-5">Change password</p>
             </Link>
-            <Link to="/" className="action-contentsb">
+            <button className="action-contentsb" onClick={handleLogout}>
               <LuLogOut />
               <p className="pl-5">Log out</p>
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -92,7 +109,7 @@ const PersonalInfo = () => {
               </button>
             </div>
             <div className="form-group">
-              <label>Name:</label>
+              <label>Full Name:</label>
               <input type="text" placeholder="Enter your name" />
             </div>
             <div className="form-group">

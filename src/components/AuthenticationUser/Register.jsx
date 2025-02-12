@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -10,9 +10,53 @@ import FormLabel from "@mui/material/FormLabel";
 import "./StyleAuthenticationUser.css";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Rating from "@mui/material/Rating";
+import axios from "axios";
 
 const Register = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
+  const [formFields, setFormFields] = useState({
+      name: "",
+      birthdate: "",
+      gender: "",
+      mobile: "",
+      address: "",
+      email: "",
+      password: "",
+      cfpassword: ""
+    });
+  const [error, setError] = useState("");
+  const history = useNavigate();
+  const handleChange = (e) => {
+    setFormFields({ 
+      ...formFields, 
+      [e.target.name]: e.target.value 
+    });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (formFields.password !== formFields.cfpassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    if (!/^\d{10}$/.test(formFields.mobile)) {
+      setError('Phone number is invalid');
+      return;
+    }
+
+    try {
+      const { cfpassword, ...dataToSend } = formFields;
+      const response = await axios.post("http://localhost:8000/api/user/register", dataToSend);
+      
+      if(response.status === 200) {
+        alert("Register successfully");
+        history("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      setError("Register failed");
+    }
+  };
 
   return (
     <section className="section py-10">
@@ -193,7 +237,8 @@ const Register = () => {
           <h1 className="text-left text-[30px] text-black mb-10 font-extrabold">
             Register with a new account
           </h1>
-          <form className="w-full">
+          {error && <p className="text-red-500 text-center">{error}</p>}
+          <form className="w-full" onSubmit={handleRegister}>
             <div className="form-group w-full mb-5">
               <FormLabel id="demo-row-radio-buttons-group-label">
                 Full Name *
@@ -204,6 +249,72 @@ const Register = () => {
                 variant="outlined"
                 className="w-full"
                 name="name"
+                value={formFields.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group w-full mb-5">
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Birthdate *
+              </FormLabel>
+              <TextField
+                type="date"
+                id="birthdate"
+                variant="outlined"
+                className="w-full"
+                name="birthdate"
+                value={formFields.birthdate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            <div className="form-group w-full mb-5">
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Gender *
+              </FormLabel>
+                <RadioGroup
+                  row aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="gender"
+                  value={formFields.gender}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel value="Female" control={<Radio />} label="Female"/>
+                  <FormControlLabel value="Male" control={<Radio />} label="Male"/>
+                </RadioGroup>
+            </div>
+
+            <div className="form-group w-full mb-5">
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Phone Number *
+              </FormLabel>
+              <TextField
+                type="text"
+                id="mobile"
+                variant="outlined"
+                className="w-full"
+                name="mobile"
+                value={formFields.mobile}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group w-full mb-5">
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Address *
+              </FormLabel>
+              <TextField
+                type="text"
+                id="address"
+                variant="outlined"
+                className="w-full"
+                name="address"
+                value={formFields.address}
+                onChange={handleChange}
+                required
               />
             </div>
 
@@ -217,6 +328,9 @@ const Register = () => {
                 variant="outlined"
                 className="w-full"
                 name="email"
+                value={formFields.email}
+                onChange={handleChange}
+                required
               />
             </div>
 
@@ -230,10 +344,40 @@ const Register = () => {
                 variant="outlined"
                 className="w-full"
                 name="password"
+                value={formFields.password}
+                onChange={handleChange}
+                required
               />
               <Button
                 className="!absolute top-[65%] right-[5px] -translate-y-1/2 
-    !w-[35px] !h-[35px] !min-w-[35px] !rounded-full !text-black"
+                !w-[35px] !h-[35px] !min-w-[35px] !rounded-full !text-black"
+                onClick={() => setIsShowPassword(!isShowPassword)}
+              >
+                {isShowPassword === false ? (
+                  <IoMdEye className="text-[20px] opacity-75" />
+                ) : (
+                  <IoMdEyeOff className="text-[20px] opacity-75" />
+                )}
+              </Button>
+            </div>
+
+            <div className="form-group w-full mb-5 relative">
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Confirm Password *
+              </FormLabel>
+              <TextField
+                type={isShowPassword === false ? "password" : "text"}
+                id="cfpassword"
+                variant="outlined"
+                className="w-full"
+                name="cfpassword"
+                value={formFields.cfpassword}
+                onChange={handleChange}
+                required
+              />
+              <Button
+                className="!absolute top-[65%] right-[5px] -translate-y-1/2 
+                !w-[35px] !h-[35px] !min-w-[35px] !rounded-full !text-black"
                 onClick={() => setIsShowPassword(!isShowPassword)}
               >
                 {isShowPassword === false ? (

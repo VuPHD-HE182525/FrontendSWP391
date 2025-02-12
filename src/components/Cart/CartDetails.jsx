@@ -7,7 +7,7 @@ import { AiOutlineDelete } from 'react-icons/ai'; // Import the delete icon
 
 function CartDetails() {
     const SHIPPING_FEE = 20000; // Shipping fee in VND
-    const [cartItems, setCartItems] = useState();
+    const [cartItems, setCartItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 

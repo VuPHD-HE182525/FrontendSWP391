@@ -1,15 +1,17 @@
 import axios from 'axios';
-import { ROOT_DOMAIN } from "../utils/constants";
+const apiurl = import.meta.env.VITE_API_URL;
 
-const TemplateApi = {
-    getAllTemplate: async (request) => {
-        const response = await axios.post(`${ROOT_DOMAIN}/template/get-template`, request, {
-            header: {
-                'Content-Type': 'application/json'
-            }
-        })
-        return response;
-    },
+export const postData = async (URL, FormData) => {
+    try {
+        const response = await fetch(apiurl + URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(FormData)
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
-
-export default TemplateApi;
