@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { IoMenu } from "react-icons/io5";
 import { LiaAngleRightSolid } from "react-icons/lia";
@@ -6,9 +6,22 @@ import { Link } from "react-router-dom";
 import { LiaShippingFastSolid } from "react-icons/lia";
 import CategoryPanel from "./CategoryPanel";
 import "../Navigation/StyleNavigation.css";
+import { fetchDataFromApi } from "../../../utils/api";
 
 export default function Navigation() {
     const [isOpenCategoryPanel, setOpenCategoryPanel] = useState(false);
+    const [categoryData, setCategoryData] = useState([]);
+
+    useEffect(() => {
+        const fullUrl = `${import.meta.env.VITE_API_URL}/api/category/`;
+
+        fetchDataFromApi("/api/category/").then((res) => {
+            if (res?.error === false) {
+                setCategoryData(res?.data)
+            }
+        })
+    }, []);
+
 
     const openCategoryPanel = () => {
         setOpenCategoryPanel(true);
@@ -37,188 +50,68 @@ export default function Navigation() {
                                 </Link>
                             </li>
 
-                            <li className="list-none relative">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
-                                        Laptop
-                                    </Button>
-                                </Link>
 
-                                <div className="submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all">
-                                    <ul>
-                                        <li className="list-none w-full relative">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Thương hiệu
+                            {
+                                categoryData?.length !== 0 && categoryData?.map((cat, index) => {
+                                    return (
+                                        <li className="list-none relative" key={ index }>
+                                            <Link to="/" className="link transition text-[14px] font-[500]">
+                                                <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff] ">
+                                                    { cat?.name }
                                                 </Button>
+                                            </Link>
 
-                                                <div className="submenu absolute top-[0%] left-[100%] min-w-[150px] bg-white shadow-md opacity-0 transition-all">
+                                            {
+                                                cat?.children?.length !== 0 &&
+                                                <div className="submenu absolute top-[120%] left-[0%] min-w-[150px] bg-white shadow-md opacity-0 transition-all">
                                                     <ul>
-                                                        <li className="list-none w-full">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                                    ASUS
-                                                                </Button>
-                                                            </Link>
-                                                        </li>
-                                                        <li className="list-none w-full">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                                    ACER
-                                                                </Button>
-                                                            </Link>
-                                                        </li>
+                                                        {
+                                                            cat?.children?.map((subCat, index_) => {
+                                                                return (
+                                                                    <li className="list-none w-full relative" key={ index }>
+                                                                        <Link to="/" className="w-full">
+                                                                            <Button className="!text-black w-full !text-left !justify-start !rounded-none">
+                                                                                { subCat?.name }
+                                                                            </Button>
 
-                                                        <li className="list-none w-full">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                                    MSI
-                                                                </Button>
-                                                            </Link>
-                                                        </li>
+                                                                            {
+                                                                                subCat?.children?.length !== 0 &&
+                                                                                <div className="submenu absolute top-[0%] left-[100%] min-w-[150px] bg-white shadow-md opacity-0 transition-all">
+                                                                                    <ul>
+                                                                                        {
+                                                                                            subCat?.children?.map((thirdLavelCat, index_) => {
+                                                                                                return (
+                                                                                                    <li className="list-none w-full" key={ index }>
+                                                                                                        <Link to="/" className="w-full">
+                                                                                                            <Button className="!text-black w-full !text-left !justify-start !rounded-none">
+                                                                                                                { thirdLavelCat?.name }
+                                                                                                            </Button>
+                                                                                                        </Link>
+                                                                                                    </li>
+                                                                                                )
+                                                                                            })
+                                                                                        }
 
-                                                        <li className="list-none w-full">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                                    LENOVO
-                                                                </Button>
-                                                            </Link>
-                                                        </li>
 
-                                                        <li className="list-none w-full">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                                    DELL
-                                                                </Button>
-                                                            </Link>
-                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                            }
+                                                                        </Link>
+                                                                    </li>
+                                                                )
+                                                            })
+                                                        }
 
-                                                        <li className="list-none w-full">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                                    HP - Pavillion
-                                                                </Button>
-                                                            </Link>
-                                                        </li>
-
-                                                        <li className="list-none w-full">
-                                                            <Link to="/" className="w-full">
-                                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                                    LG - Gram
-                                                                </Button>
-                                                            </Link>
-                                                        </li>
                                                     </ul>
                                                 </div>
-                                            </Link>
-                                        </li>
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Giá bán
-                                                </Button>
-                                            </Link>
-                                        </li>
+                                            }
 
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    CPU Intel - AMD
-                                                </Button>
-                                            </Link>
+
                                         </li>
+                                    )
+                                })
+                            }
 
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Nhu cầu sử dụng
-                                                </Button>
-                                            </Link>
-                                        </li>
-
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Link kiện laptop
-                                                </Button>
-                                            </Link>
-                                        </li>
-
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Laptop ASUS
-                                                </Button>
-                                            </Link>
-                                        </li>
-
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Latop ACER
-                                                </Button>
-                                            </Link>
-                                        </li>
-
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Latop MSI
-                                                </Button>
-                                            </Link>
-                                        </li>
-
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Latop LENOVO
-                                                </Button>
-                                            </Link>
-                                        </li>
-
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Latop DELL
-                                                </Button>
-                                            </Link>
-                                        </li>
-
-                                        <li className="list-none w-full">
-                                            <Link to="/" className="w-full">
-                                                <Button className="!text-black w-full !text-left !justify-start !rounded-none">
-                                                    Latop AI
-                                                </Button>
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            {/* New Arrivals */ }
-                            <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
-                                        New Arrivals
-                                    </Button>
-                                </Link>
-                            </li>
-                            <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
-                                        All Brands
-                                    </Button>
-                                </Link>
-                            </li>
-
-                            {/* All Brands */ }
-                            <li className="list-none">
-                                <Link to="/" className="link transition text-[14px] font-[500]">
-                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
-                                        More
-                                    </Button>
-                                </Link>
-                            </li>
                         </ul>
                     </div>
 
@@ -230,14 +123,18 @@ export default function Navigation() {
                         </p>
                     </div>
                 </div>
-            </nav>
+            </nav >
 
             {/* Sidebar Categories Panel */ }
-            <CategoryPanel
-                openCategoryPanel={ openCategoryPanel }
-                isOpenCategoryPanel={ isOpenCategoryPanel }
-                setOpenCategoryPanel={ setOpenCategoryPanel }
-            />
+            {
+                categoryData?.length !== 0 &&
+                < CategoryPanel
+                    openCategoryPanel={ openCategoryPanel }
+                    isOpenCategoryPanel={ isOpenCategoryPanel }
+                    setOpenCategoryPanel={ setOpenCategoryPanel }
+                    data={ categoryData }
+                />
+            }
         </>
     );
 }
