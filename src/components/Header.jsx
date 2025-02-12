@@ -9,6 +9,7 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import Tooltip from '@mui/material/Tooltip';
 import Navigation from "./Header/Navigation/Navigation";
+import axios from "axios";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -87,8 +88,8 @@ export default function Header() {
                                     <Tooltip title="Cart">
                                         <IconButton aria-label="cart">
                                             <StyledBadge
-                                                badgeContent={cartItemCount} color="secondary">
-                                                <Link to="/cart"> {/* Link to /cart */}
+                                                badgeContent={ cartItemCount } color="secondary">
+                                                <Link to="/cart"> {/* Link to /cart */ }
                                                     <MdOutlineShoppingCart />
                                                 </Link>
                                             </StyledBadge>
