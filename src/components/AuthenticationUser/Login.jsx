@@ -28,23 +28,13 @@ const Login = () => {
     e.preventDefault(); 
 
     try {
-      const response = await axios.post("/api/user/login", formFields);
+      const response = await axios.post("http://localhost:8000/api/user/login", formFields);
         
         if (response.status === 200) {
-            const { token, role } = response.data;
-
-            // Lưu token vào localStorage
-            localStorage.setItem("token", token);
-
-            // Điều hướng dựa trên role
-            if (role === "Admin") {
-                history("*");
-                alert("Login failed!");
-            } else {
-                history("/");
-            }
-
+            const { accessToken } = response.data;
+            localStorage.setItem("token", accessToken);
             alert("Login successful!");
+            history("/");
         }
     } catch (error) {
       console.error("Error: ",error);

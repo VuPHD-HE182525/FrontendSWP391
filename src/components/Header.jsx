@@ -22,8 +22,12 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 export default function Header() {
     const [cartItemCount, setCartItemCount] = useState(0);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        setIsLoggedIn(!!token);
+
         const fetchCartItems = async () => {
             try {
                 const response = await axios.get("/api/cart", {
@@ -37,8 +41,10 @@ export default function Header() {
             }
         };
 
-        fetchCartItems(); // Fetch cart items on component mount
-    },);
+       if (token) {
+            fetchCartItems(); // Fetch cart items on component mount
+        }
+    }, []); 
 
     return (
         <>
@@ -75,14 +81,16 @@ export default function Header() {
 
                         <div className="col3 w-[30%] flex items-center pl-7">
                             <ul className="flex items-center gap-3">
-                                <li className="list-none">
-                                    <Link to="/login" className="link transition text-[15px] font-[500]">
-                                        Login
-                                    </Link> | &nbsp;
-                                    <Link to="/register" className="link transition text-[15px] font-[500]">
-                                        Register
-                                    </Link>
-                                </li>
+                                {!isLoggedIn && (
+                                    <li className="list-none">
+                                        <Link to="/login" className="link transition text-[15px] font-[500]">
+                                            Login
+                                        </Link> | &nbsp;
+                                        <Link to="/register" className="link transition text-[15px] font-[500]">
+                                            Register
+                                        </Link>
+                                    </li>
+                                )}
 
                                 <li>
                                     <Tooltip title="Cart">
