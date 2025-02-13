@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../Header";
@@ -10,7 +10,14 @@ function CartContact() {
     const [cartItems, setCartItems] = useState([]);
     const [formData, setFormData] = useState({
         fullName: "",
-        phoneNumber: "",
+        country: "", // Added country field
+        streetAddress1: "", // Added street address fields
+        streetAddress2: "",
+        city: "",
+        state: "",
+        postcode: "",
+        phone: "",
+        email: "",
         paymentMethod: "cash",
     });
     const [selectedAddress, setSelectedAddress] = useState(null);
@@ -70,23 +77,42 @@ function CartContact() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const grandTotal = calculateGrandTotal();
-            const total = calculateTotalWithShipping();
+            // 1. Combine Address Lines
+            const addressLine = `${formData.streetAddress1} ${formData.streetAddress2}`.trim();
+
+            // 2. Save Address
+            const addressResponse = await axios.post(
+                "/api/addresses", // Make sure this is the correct route
+                {
+                    address_line: addressLine, // Use the combined address line
+                    city: formData.city,
+                    state: formData.state,
+                    pincode: formData.postcode,
+                    country: formData.country,
+                    mobile: formData.phone,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                },
+            );
+            const savedAddressId = addressResponse.data._id;
 
             await axios.post(
                 "/api/orders",
                 {
                     orderId: generateOrderId(),
-                    productId: cartItems.map((item) => item.product._id),
+                    productId: cartItems.map((item) => item.productId._id),
                     product_detail: cartItems.map((item) => ({
-                        name: item.product.name,
-                        image: item.product.image,
+                        name: item.productId.name,
+                        image: item.productId.image,
                         quantity: item.quantity,
-                        price: item.product.price,
+                        price: item.productId.price,
                     })),
-                    delivery_address: selectedAddress,
+                    delivery_address: savedAddressId,
                     subTotalAmt: grandTotal,
-                    totolAmt: total,
+                    totolAmt: totalWithShipping,
                 },
                 {
                     headers: {
@@ -109,91 +135,156 @@ function CartContact() {
         );
     };
 
-    const calculateTotalPrice = (item) => {
-        return item.product.price * item.quantity;
-    };
+    const calculateTotalPrice = (item) => item.productId.price * item.quantity;
 
-    const calculateGrandTotal = () => {
-        return cartItems.reduce(
-            (total, item) => total + calculateTotalPrice(item),
-            0,
-        );
-    };
+    const grandTotal = useMemo(() => {
+        if (Array.isArray(cartItems)) { // Check if cartItems is an array
+            return cartItems.reduce((total, item) => total + calculateTotalPrice(item), 0);
+        }
+        return 0; // Return 0 if cartItems is not an array yet
+    }, [cartItems]);
 
-    const calculateTotalWithShipping = () => {
-        return calculateGrandTotal() + SHIPPING_FEE;
-    };
+    const totalWithShipping = useMemo(() => {
+        return grandTotal + SHIPPING_FEE
+    }, [grandTotal])
 
     return (
         <div>
             <div className="cart-contact container mx-auto mt-10">
-
                 <div className="cart-content grid grid-cols-12 gap-8">
-                    <div className="col-span-9"> {/* Contact Details - Now takes 6 columns */}
-                        <h3 className="text-xl font-bold mb-4">BILLING DETAILs</h3>
-                        <form onSubmit={handleSubmit} className="bg-gray-100 p-4 rounded">
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="fullName"
-                                    className="block text-gray-700 font-medium mb-2"
-                                >
-                                    Full Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="fullName"
-                                    name="fullName"
-                                    value={formData.fullName}
-                                    onChange={handleChange}
-                                    className="border border-gray-400 p-2 w-full rounded"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="phoneNumber"
-                                    className="block text-gray-700 font-medium mb-2"
-                                >
-                                    Phone Number
-                                </label>
-                                <input
-                                    type="tel"
-                                    id="phoneNumber"
-                                    name="phoneNumber"
-                                    value={formData.phoneNumber}
-                                    onChange={handleChange}
-                                    className="border border-gray-400 p-2 w-full rounded"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="address"
-                                    className="block text-gray-700 font-medium mb-2"
-                                >
-                                    Delivery Address
-                                </label>
-                                <select
-                                    id="address"
-                                    name="address"
-                                    value={selectedAddress}
-                                    onChange={(e) => setSelectedAddress(e.target.value)}
-                                    className="border border-gray-400 p-2 w-full rounded"
-                                    required
-                                >
-                                    {Array.isArray(addresses) && addresses.length > 0 ? (
-                                        addresses.map((address) => (
-                                            <option key={address._id} value={address._id}>
-                                                {address.street}, {address.city}, {address.country}
-                                            </option>
-                                        ))
-                                    ) : (
-                                        <option disabled>No addresses available</option>
-                                    )}
-                                </select>
+                    <div className="col-span-9">
+                        {/* Contact Details - Now takes 8 columns */}
+                        <h3 className="text-xl font-bold mb-4">BILLING DETAILS</h3>
+                        <form onSubmit={handleSubmit} className="bg-white p-4 rounded">
+                            {/* Added border here */}
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* 2-column grid for fields */}
+                                <div>
+                                    <label htmlFor="fullName" className="block text-gray-700 font-medium mb-2">
+                                        Full Name *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="fullName"
+                                        name="fullName"
+                                        value={formData.fullName}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="country" className="block text-gray-700 font-medium mb-2">
+                                        Country *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="country"
+                                        name="country"
+                                        value={formData.country}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    {/* Street Address takes full width */}
+                                    <label htmlFor="streetAddress1" className="block text-gray-700 font-medium mb-2">
+                                        Street address *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="streetAddress1"
+                                        name="streetAddress1"
+                                        placeholder="House Number & Street Name"
+                                        value={formData.streetAddress1}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <input
+                                        type="text"
+                                        id="streetAddress2"
+                                        name="streetAddress2"
+                                        placeholder="Apartment, suite, etc."
+                                        value={formData.streetAddress2}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <label htmlFor="city" className="block text-gray-700 font-medium mb-2">
+                                        City
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="city"
+                                        name="city"
+                                        value={formData.city}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <label htmlFor="state" className="block text-gray-700 font-medium mb-2">
+                                        State / County *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="state"
+                                        name="state"
+                                        value={formData.state}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <label htmlFor="postcode" className="block text-gray-700 font-medium mb-2">
+                                        Postcode / ZIP *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="postcode"
+                                        name="postcode"
+                                        value={formData.postcode}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    {/* Phone and Email take full width below */}
+                                    <label htmlFor="phone" className="block text-gray-700 font-medium mb-2">
+                                        Phone
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        id="phone"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+                                        Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        className="border border-gray-400 p-2 w-full rounded"
+                                    />
+                                </div>
                             </div>
 
-                            <h3 className="text-xl font-bold mb-4">Payment Method</h3>
+                            <h3 className="text-xl font-bold mt-8 mb-4">Payment Method</h3>
                             <div className="flex items-center mb-4">
                                 <input
                                     type="radio"
@@ -211,46 +302,33 @@ function CartContact() {
                         </form>
                     </div>
 
-                    <div className="col-span-3"> {/* Summary - Now takes 6 columns */}
-                        <h3 className="text-xl font-bold mb-4">Your Cart</h3>
-                        <div className="bg-gray-100 p-4 rounded">
-                        <div className="flex justify-between mb-2 mt-2">
-                                <span>{cartItems.length} Items:</span>
-                                <span>
-                                    {calculateGrandTotal().toLocaleString("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
-                                </span>
+                    <div className="col-span-3">
+                        {/* Summary - Now takes 4 columns */}
+                        <div className="bg-white p-4 rounded border">
+                            {/* Added border here */}
+                            <h3 className="text-xl font-bold mb-4">Your Cart</h3>
+                            <div className="bg-white p-4 rounded">
+                                <hr className="my-2" />
+                                <div className="flex justify-between mb-2">
+                                    <span>{cartItems.length} Items:</span>
+                                    <span>{grandTotal.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</span>
+                                </div>
+                                <div className="flex justify-between mb-2">
+                                    <span>Shipping:</span>
+                                    <span>{SHIPPING_FEE.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</span>
+                                </div>
+                                <div className="flex justify-between font-bold">
+                                    <span>Total:</span>
+                                    <span>{totalWithShipping.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}</span>
+                                </div>
                             </div>
-                            <div className="flex justify-between mb-2">
-                                <span>Shipping:</span>
-                                <span>
-                                    {SHIPPING_FEE.toLocaleString("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
-                                </span>
-                            </div>
-                            <hr className="my-2" />
-                            <div className="flex justify-between font-bold">
-                                <span>Total:</span>
-                                <span>
-                                    {calculateTotalWithShipping().toLocaleString("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
-                                </span>
-                            </div>
-
-                            <div className="mt-4 flex justify-center">
-                                <button
-                                    type="submit"
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-                                >
-                                    Checkout
-                                </button>
-                            </div>
+                            <button
+                                type="submit" // Changed to type="submit"
+                                onClick={handleSubmit} // Keep this for the onSubmit handler
+                                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                CHECK OUT
+                            </button>
                         </div>
                     </div>
                 </div>
