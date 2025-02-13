@@ -10,17 +10,14 @@ const ProductList = () => {
     const [selectedPriceRange, setSelectedPriceRange] = useState("All");
     const [customPriceRange, setCustomPriceRange] = useState([0, 150000000]);
     const [selectedRating, setSelectedRating] = useState(null);
-<<<<<<< Updated upstream
-=======
-    const [products, setProducts] = useState([]);  // State để lưu dữ liệu sản phẩm từ API
-    const [loading, setLoading] = useState(true);  // State để theo dõi trạng thái tải
-    const [error, setError] = useState("");  // State để lưu lỗi nếu có
->>>>>>> Stashed changes
+    const [products, setProducts] = useState([]); // State lưu danh sách sản phẩm từ API
+    const [loading, setLoading] = useState(true); // State theo dõi trạng thái tải
+    const [error, setError] = useState(""); // State lưu lỗi nếu có
 
     // Danh mục sản phẩm
     const categories = ["Tất cả", "Điện Thoại", "Laptop", "Phụ Kiện"];
 
-    // Lấy danh sách thương hiệu từ dữ liệu
+    // Lấy danh sách thương hiệu từ dữ liệu sản phẩm
     const brands = ["Tất cả", ...new Set(products.map((product) => product.brand))];
 
     // Mức giá lọc
@@ -36,13 +33,9 @@ const ProductList = () => {
 
     // Lọc sản phẩm theo danh mục, thương hiệu, giá và đánh giá sao
     const filteredProducts = products.filter((product) => {
-        // Kiểm tra lọc theo danh mục (dùng catName thay vì category)
         const matchesCategory = selectedCategory === "Tất cả" || product.catName === selectedCategory;
-
-        // Kiểm tra lọc theo thương hiệu
         const matchesBrand = selectedBrand === "Tất cả" || product.brand === selectedBrand;
 
-        // Kiểm tra lọc theo giá
         let matchesPrice = true;
         if (selectedPriceRange !== "All") {
             const range = priceRanges.find((p) => p.value === selectedPriceRange);
@@ -51,23 +44,21 @@ const ProductList = () => {
             matchesPrice = product.price >= customPriceRange[0] && product.price <= customPriceRange[1];
         }
 
-        // Kiểm tra lọc theo đánh giá sao
         const matchesRating = selectedRating === null || product.rating >= selectedRating;
 
         return matchesCategory && matchesBrand && matchesPrice && matchesRating;
     });
 
-
     useEffect(() => {
         const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
         axios.get(`${API_BASE_URL}/api/product/getAllProducts`)
             .then(response => {
-                console.log("Dữ liệu API nhận được:", response.data); // Kiểm tra dữ liệu API
+                console.log("Dữ liệu API nhận được:", response.data);
                 if (response.data && Array.isArray(response.data.products)) {
-                    setProducts(response.data.products); // Cập nhật state đúng cách
+                    setProducts(response.data.products);
                 } else {
                     console.error("API không trả về mảng products:", response.data);
-                    setProducts([]); // Đảm bảo luôn có mảng để tránh lỗi .map()
+                    setProducts([]); // Đảm bảo luôn có danh sách sản phẩm hợp lệ
                 }
                 setLoading(false);
             })
@@ -77,18 +68,13 @@ const ProductList = () => {
                 console.error(err);
             });
     }, []);
-    // Chỉ chạy 1 lần khi component mount
 
     if (loading) return <div>Đang tải...</div>;
     if (error) return <div>{error}</div>;
 
     return (
         <div className="bg-white">
-<<<<<<< Updated upstream
-            <div className="container mx-auto px-4 flex gap-6 bg-white">
-=======
             <div className="container mx-auto px-4 flex gap-6">
->>>>>>> Stashed changes
                 {/* Sidebar - Bộ lọc */}
                 <aside className="w-1/4 border p-4 rounded-lg shadow-lg max-h-[500px] overflow-y-auto sticky top-4">
                     <h2 className="text-xl font-semibold mb-4">Bộ lọc tìm kiếm</h2>
@@ -105,11 +91,7 @@ const ProductList = () => {
                                             name="category"
                                             value={category}
                                             checked={selectedCategory === category}
-<<<<<<< Updated upstream
                                             onChange={() => setSelectedCategory(category)}
-=======
-                                            onChange={() => setSelectedCategory(category)}  // Cập nhật danh mục khi người dùng chọn
->>>>>>> Stashed changes
                                             className="form-radio text-red-500"
                                         />
                                         <span>{category}</span>
@@ -119,10 +101,6 @@ const ProductList = () => {
                         </ul>
                     </div>
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                     {/* Bộ lọc giá */}
                     <div className="mb-6">
                         <h3 className="font-semibold mb-2">Mức giá</h3>
@@ -144,56 +122,6 @@ const ProductList = () => {
                             ))}
                         </ul>
                     </div>
-
-
-
-                    {/* Bộ lọc theo đánh giá sao */}
-                    <div className="mb-6">
-                        <h3 className="font-semibold mb-2">Lọc theo đánh giá</h3>
-                        <ul>
-                            {[5, 4, 3, 2, 1].map((stars) => (
-                                <li key={stars} className="mb-2">
-                                    <label className="flex items-center space-x-2 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="rating"
-                                            value={stars}
-                                            checked={selectedRating === stars}
-                                            onChange={() => setSelectedRating(stars)}
-                                            className="form-radio text-red-500"
-                                        />
-                                        <span>
-                                            {"★".repeat(stars)}
-                                            {"☆".repeat(5 - stars)}
-                                        </span>
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Bộ lọc thương hiệu */}
-                    <div className="mb-6">
-                        <h3 className="font-semibold mb-2">Thương hiệu</h3>
-                        <ul>
-                            {brands.map((brand) => (
-                                <li key={brand} className="mb-2">
-                                    <label className="flex items-center space-x-2 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="brand"
-                                            value={brand}
-                                            checked={selectedBrand === brand}
-                                            onChange={() => setSelectedBrand(brand)}
-                                            className="form-radio text-red-500"
-                                        />
-                                        <span>{brand}</span>
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
                 </aside>
 
                 {/* Danh sách sản phẩm */}
@@ -204,33 +132,30 @@ const ProductList = () => {
                     <div className="grid grid-cols-3 gap-6">
                         {filteredProducts.length > 0 ? (
                             filteredProducts.map((product) => (
-                                <div key={product.id} className="border p-4 rounded-lg shadow-lg">
-<<<<<<< Updated upstream
-                                    <Link to={`/product/${product.id}`}>
+                                <div key={product._id} className="border p-4 rounded-lg shadow-lg">
+                                    <Link to={`/product/${product._id}`}>
                                         <img
-                                            src={product.image}
+                                            src={product.image || "https://via.placeholder.com/150"}
                                             alt={product.name}
                                             className="w-full h-40 object-contain bg-white"
                                         />
                                     </Link>
-=======
-                                    <Link to={`/product/${product._id}`}> {/* Thay `_id` bằng ID sản phẩm trong API */}
-                                        <img src={product.image} alt={product.name} className="w-full h-96 object-contain rounded-lg shadow-lg bg-white" />
-                                    </Link>
-
->>>>>>> Stashed changes
                                     <h3 className="text-lg font-semibold mt-2">{product.name}</h3>
                                     <p className="text-sm text-gray-500">{product.brand}</p>
                                     <div className="flex items-center space-x-2">
                                         <span className="text-red-500 font-bold">
                                             {product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
                                         </span>
-                                        <span className="text-gray-400 line-through">
-                                            {product.oldPrice.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
-                                        </span>
-                                        <span className="bg-red-500 text-white px-2 py-1 text-xs rounded">
-                                            -{product.discount}%
-                                        </span>
+                                        {product.oldPrice && (
+                                            <span className="text-gray-400 line-through">
+                                                {product.oldPrice.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
+                                            </span>
+                                        )}
+                                        {product.discount && (
+                                            <span className="bg-red-500 text-white px-2 py-1 text-xs rounded">
+                                                -{product.discount}%
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                             ))
