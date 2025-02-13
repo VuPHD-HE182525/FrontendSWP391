@@ -50,12 +50,19 @@ export default function Navigation() {
                                 </Link>
                             </li>
 
+                            <li className="list-none">
+                                <Link to="/products" className="link transition text-[14px] font-[500]">
+                                    <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff]">
+                                        Sản phẩm
+                                    </Button>
+                                </Link>
+                            </li>
 
                             {
                                 categoryData?.length !== 0 && categoryData?.map((cat, index) => {
                                     return (
                                         <li className="list-none relative" key={ index }>
-                                            <Link to="/" className="link transition text-[14px] font-[500]">
+                                            <Link to="/products" className="link transition text-[14px] font-[500]">
                                                 <Button className="link transition !font-[500] !text-black hover:!text-[#0066ff] ">
                                                     { cat?.name }
                                                 </Button>
@@ -68,7 +75,7 @@ export default function Navigation() {
                                                         {
                                                             cat?.children?.map((subCat, index_) => {
                                                                 return (
-                                                                    <li className="list-none w-full relative" key={ index }>
+                                                                    <li className="list-none w-full relative" key={ index_ }>
                                                                         <Link to="/" className="w-full">
                                                                             <Button className="!text-black w-full !text-left !justify-start !rounded-none">
                                                                                 { subCat?.name }

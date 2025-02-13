@@ -13,9 +13,8 @@ import { MyContext } from "../layouts/Layout"
 import { fetchDataFromApi } from "../utils/api";
 
 export default function HomePage() {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
     const [popularProductsData, setPopularProductsData] = useState([])
-
     const context = useContext(MyContext);
 
     useEffect(() => {
@@ -82,7 +81,7 @@ export default function HomePage() {
                                 {
                                     context?.categoryData?.length !== 0 && context?.categoryData?.map((cat, index) => {
                                         return (
-                                            <Tab label={ cat?.name } onClick={ () => filterByCatId(cat?._id) } />
+                                            <Tab label={ cat?.name } key={ index } onClick={ () => filterByCatId(cat?._id) } />
                                         )
                                     })
                                 }

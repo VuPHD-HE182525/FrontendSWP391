@@ -11,7 +11,7 @@ export default function ProductItem(props) {
     return (
         <div className="productItem shadow-lg rounded-md overflow-hidden border-2 border-gray-300">
             <div className="group imgWrapper w-[100%] overflow-hidden rounded-md relative">
-                <Link to={ `/propduct/${props?.item?.id}` }>
+                <Link to={ `/product/${props?.item?._id}` }>
                     <div className="img h-[220px] overflow-hidden">
                         <img
                             src="https://cdn2.fptshop.com.vn/unsafe/384x0/filters:quality(100)/iphone_16_pro_max_black_titan_b3274fbf05.png"
