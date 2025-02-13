@@ -101,7 +101,9 @@ export default function Header() {
                                     <Tooltip title="Wish List">
                                         <IconButton aria-label="wish-list">
                                             <StyledBadge badgeContent={ 4 } color="secondary">
-                                                <IoMdHeartEmpty />
+                                                <Link to="/profile/wish-list">
+                                                    <IoMdHeartEmpty />
+                                                </Link>
                                             </StyledBadge>
                                         </IconButton>
                                     </Tooltip >

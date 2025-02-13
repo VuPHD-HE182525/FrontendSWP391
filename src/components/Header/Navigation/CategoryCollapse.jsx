@@ -23,7 +23,7 @@ export default function CategoryCollapse(props) {
                         props?.data?.length !== 0 && props?.data?.map((cat, index) => {
                             return (
                                 <li className="list-none flex items-center relative flex-col">
-                                    <Link to="/" className="w-full">
+                                    <Link to="/products" className="w-full">
                                         <Button className="w-full !text-left !justify-start !px-3 !text-black">
                                             { cat?.name }
                                         </Button>
@@ -67,7 +67,7 @@ export default function CategoryCollapse(props) {
                                                                         subCat?.children?.length !== 0 && subCat?.children?.map((thirdLavelCat, index_) => {
                                                                             return (
                                                                                 <li className="list-none relative mb-1" key={ index_ }>
-                                                                                    <Link to="/" className="link w-full !text-left !justify-start !px-3 transition text-[13px]">
+                                                                                    <Link to="/products" className="link w-full !text-left !justify-start !px-3 transition text-[13px]">
                                                                                         { thirdLavelCat?.name }
                                                                                     </Link>
                                                                                 </li>

@@ -19,8 +19,8 @@ export default function HomeCatergorySlider(props) {
                     {
                         props?.data?.map((cat, index) => {
                             return (
-                                <SwiperSlide>
-                                    <Link to="/">
+                                <SwiperSlide key={ index }>
+                                    <Link to={ cat?._id }>
                                         <div className="item py-7 px-3 bg-white rounded-sm text-center flex items-center justify-center flex-col">
                                             <img
                                                 src="https://cdn2.fptshop.com.vn/unsafe/96x0/filters:quality(100)/laptop_thumb_2_4df0fab60f.png"
