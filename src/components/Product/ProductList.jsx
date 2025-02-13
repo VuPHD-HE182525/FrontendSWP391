@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import mockProducts from "../../data/mockData";
+import axios from "axios";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
@@ -10,12 +10,18 @@ const ProductList = () => {
     const [selectedPriceRange, setSelectedPriceRange] = useState("All");
     const [customPriceRange, setCustomPriceRange] = useState([0, 150000000]);
     const [selectedRating, setSelectedRating] = useState(null);
+<<<<<<< Updated upstream
+=======
+    const [products, setProducts] = useState([]);  // State để lưu dữ liệu sản phẩm từ API
+    const [loading, setLoading] = useState(true);  // State để theo dõi trạng thái tải
+    const [error, setError] = useState("");  // State để lưu lỗi nếu có
+>>>>>>> Stashed changes
 
     // Danh mục sản phẩm
-    const categories = ["Tất cả", "Smartphone", "Laptop", "Headphone"];
+    const categories = ["Tất cả", "Điện Thoại", "Laptop", "Phụ Kiện"];
 
     // Lấy danh sách thương hiệu từ dữ liệu
-    const brands = ["Tất cả", ...new Set(mockProducts.map((product) => product.brand))];
+    const brands = ["Tất cả", ...new Set(products.map((product) => product.brand))];
 
     // Mức giá lọc
     const priceRanges = [
@@ -29,10 +35,14 @@ const ProductList = () => {
     ];
 
     // Lọc sản phẩm theo danh mục, thương hiệu, giá và đánh giá sao
-    const filteredProducts = mockProducts.filter((product) => {
-        const matchesCategory = selectedCategory === "Tất cả" || product.category === selectedCategory;
+    const filteredProducts = products.filter((product) => {
+        // Kiểm tra lọc theo danh mục (dùng catName thay vì category)
+        const matchesCategory = selectedCategory === "Tất cả" || product.catName === selectedCategory;
+
+        // Kiểm tra lọc theo thương hiệu
         const matchesBrand = selectedBrand === "Tất cả" || product.brand === selectedBrand;
 
+        // Kiểm tra lọc theo giá
         let matchesPrice = true;
         if (selectedPriceRange !== "All") {
             const range = priceRanges.find((p) => p.value === selectedPriceRange);
@@ -41,14 +51,44 @@ const ProductList = () => {
             matchesPrice = product.price >= customPriceRange[0] && product.price <= customPriceRange[1];
         }
 
+        // Kiểm tra lọc theo đánh giá sao
         const matchesRating = selectedRating === null || product.rating >= selectedRating;
 
         return matchesCategory && matchesBrand && matchesPrice && matchesRating;
     });
 
+
+    useEffect(() => {
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+        axios.get(`${API_BASE_URL}/api/product/getAllProducts`)
+            .then(response => {
+                console.log("Dữ liệu API nhận được:", response.data); // Kiểm tra dữ liệu API
+                if (response.data && Array.isArray(response.data.products)) {
+                    setProducts(response.data.products); // Cập nhật state đúng cách
+                } else {
+                    console.error("API không trả về mảng products:", response.data);
+                    setProducts([]); // Đảm bảo luôn có mảng để tránh lỗi .map()
+                }
+                setLoading(false);
+            })
+            .catch(err => {
+                setError("Có lỗi xảy ra khi tải dữ liệu!");
+                setLoading(false);
+                console.error(err);
+            });
+    }, []);
+    // Chỉ chạy 1 lần khi component mount
+
+    if (loading) return <div>Đang tải...</div>;
+    if (error) return <div>{error}</div>;
+
     return (
         <div className="bg-white">
+<<<<<<< Updated upstream
             <div className="container mx-auto px-4 flex gap-6 bg-white">
+=======
+            <div className="container mx-auto px-4 flex gap-6">
+>>>>>>> Stashed changes
                 {/* Sidebar - Bộ lọc */}
                 <aside className="w-1/4 border p-4 rounded-lg shadow-lg max-h-[500px] overflow-y-auto sticky top-4">
                     <h2 className="text-xl font-semibold mb-4">Bộ lọc tìm kiếm</h2>
@@ -65,7 +105,11 @@ const ProductList = () => {
                                             name="category"
                                             value={category}
                                             checked={selectedCategory === category}
+<<<<<<< Updated upstream
                                             onChange={() => setSelectedCategory(category)}
+=======
+                                            onChange={() => setSelectedCategory(category)}  // Cập nhật danh mục khi người dùng chọn
+>>>>>>> Stashed changes
                                             className="form-radio text-red-500"
                                         />
                                         <span>{category}</span>
@@ -75,6 +119,10 @@ const ProductList = () => {
                         </ul>
                     </div>
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
                     {/* Bộ lọc giá */}
                     <div className="mb-6">
                         <h3 className="font-semibold mb-2">Mức giá</h3>
@@ -157,6 +205,7 @@ const ProductList = () => {
                         {filteredProducts.length > 0 ? (
                             filteredProducts.map((product) => (
                                 <div key={product.id} className="border p-4 rounded-lg shadow-lg">
+<<<<<<< Updated upstream
                                     <Link to={`/product/${product.id}`}>
                                         <img
                                             src={product.image}
@@ -164,6 +213,12 @@ const ProductList = () => {
                                             className="w-full h-40 object-contain bg-white"
                                         />
                                     </Link>
+=======
+                                    <Link to={`/product/${product._id}`}> {/* Thay `_id` bằng ID sản phẩm trong API */}
+                                        <img src={product.image} alt={product.name} className="w-full h-96 object-contain rounded-lg shadow-lg bg-white" />
+                                    </Link>
+
+>>>>>>> Stashed changes
                                     <h3 className="text-lg font-semibold mt-2">{product.name}</h3>
                                     <p className="text-sm text-gray-500">{product.brand}</p>
                                     <div className="flex items-center space-x-2">
