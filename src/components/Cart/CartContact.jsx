@@ -103,12 +103,12 @@ function CartContact() {
                 "/api/orders",
                 {
                     orderId: generateOrderId(),
-                    productId: cartItems.map((item) => item.productIdId._id),
+                    productId: cartItems.map((item) => item.productId._id),
                     product_detail: cartItems.map((item) => ({
                         name: item.productId.name,
                         image: item.productId.image,
                         quantity: item.quantity,
-                        price: item.productIdId.price,
+                        price: item.productId.price,
                     })),
                     delivery_address: savedAddressId,
                     subTotalAmt: grandTotal,
