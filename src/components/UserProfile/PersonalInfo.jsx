@@ -21,6 +21,7 @@ const PersonalInfo = () => {
     try {
       const response = await axios.get("http://localhost:8000/api/user/logout", { withCredentials: true });
       if(response.status(200) === 200) {
+        localStorage.removeItem("token")
         alert("Logout successfully")
         history("/login");
       }

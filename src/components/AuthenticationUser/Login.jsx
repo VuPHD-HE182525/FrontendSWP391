@@ -31,8 +31,8 @@ const Login = () => {
       const response = await axios.post("http://localhost:8000/api/user/login", formFields);
         
         if (response.status === 200) {
-            const token = response.data;
-            localStorage.setItem("token", token);
+            const { accessToken } = response.data;
+            localStorage.setItem("token", accessToken);
             alert("Login successful!");
             history("/");
         }
