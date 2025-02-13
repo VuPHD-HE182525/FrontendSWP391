@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import HomeSlider from "../components/HomePage/HomeSlider";
 import HomeCatergorySlider from "../components/HomePage/HomeCatergorySlider";
 import { LiaShippingFastSolid } from "react-icons/lia";
@@ -9,13 +9,34 @@ import Box from '@mui/material/Box';
 import ProductSlider from "../components/HomePage/ProductSlider";
 import HomeSliderV2 from "../components/HomePage/HomeSliderV2";
 import BannerBoxV2 from "../components/HomePage/BannerBoxV2/BannerBoxV2";
+import { MyContext } from "../layouts/Layout"
+import { fetchDataFromApi } from "../utils/api";
 
 export default function HomePage() {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
+    const [popularProductsData, setPopularProductsData] = useState([])
+    const context = useContext(MyContext);
+
+    useEffect(() => {
+        fetchDataFromApi(`/api/product/getAllProductsByCatId/${context?.categoryData[0]?._id}`).then((res) => {
+            if (res?.error === false) {
+                setPopularProductsData(res?.products)
+            }
+        })
+
+    }, [context?.categoryData])
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const filterByCatId = (id) => {
+        fetchDataFromApi(`/api/product/getAllProductsByCatId/${id}`).then((res) => {
+            if (res?.error === false) {
+                setPopularProductsData(res?.products)
+            }
+        })
+    }
 
     return (
         <>
@@ -33,15 +54,20 @@ export default function HomePage() {
                 </div>
             </section>
 
+            {
+                context?.data?.length !== 0 && <HomeCatergorySlider data={ context?.categoryData } />
+            }
 
-            <HomeCatergorySlider />
+
 
             <section className="bg-white py-5">
                 <div className="container">
                     <div className="flex items-center justify-between">
                         <div className="leftSection">
                             <h2 className="text-[20px] font-[600]">Sản phẩm thịnh hành</h2>
-                            <p className="text-[14px] font-[400]">Đừng bỏ lỡ các ưu đãi của tháng 2 này</p>
+                            <p className="text-[14px] font-[400] mt-0 mb-0">
+                                Đừng bỏ lỡ các ưu đãi của tháng 2 này
+                            </p>
                         </div>
 
                         <div className="rightSection w-[60%]">
@@ -52,21 +78,22 @@ export default function HomePage() {
                                 scrollButtons="auto"
                                 aria-label="scrollable auto tabs example"
                             >
-                                <Tab label="Laptop" />
-                                <Tab label="Tủ lạnh" />
-                                <Tab label="Phụ kiện" />
-                                <Tab label="Điện gia dụng" />
-                                <Tab label="Máy lọc nước" />
-                                <Tab label="Đồng hồ" />
-                                <Tab label="Máy tính bảng" />
-                                <Tab label="Tivi" />
-                                <Tab label="Máy tính bảng" />
+                                {
+                                    context?.categoryData?.length !== 0 && context?.categoryData?.map((cat, index) => {
+                                        return (
+                                            <Tab label={ cat?.name } key={ index } onClick={ () => filterByCatId(cat?._id) } />
+                                        )
+                                    })
+                                }
+
                             </Tabs>
                         </div>
-
                     </div>
 
-                    <ProductSlider items={ 6 } />
+                    {
+                        popularProductsData?.length !== 0 && <ProductSlider items={ 6 } data={ popularProductsData } />
+                    }
+
 
                 </div>
             </section>

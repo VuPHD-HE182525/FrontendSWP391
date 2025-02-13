@@ -13,6 +13,8 @@ const ProductList = lazy(() => import("../components/Product/ProductList"));
 const ProductDetails = lazy(() => import("../components/Product/ProductDetails"));
 // Cart component
 const Cart = lazy(() => import("../components/Cart/CartDetails"));
+const CartContact = lazy(() => import("../components/Cart/CartContact"));
+const CartCompletion = lazy(() => import("../components/Cart/CartCompletion"));
   
 
 const router = (dataNavbar) =>
@@ -30,6 +32,8 @@ const router = (dataNavbar) =>
         { path: "/verify", element: <Verify /> },
         { path: "/profile/info", element: <PersonalInfo /> },
         { path: "/cart", element: <Cart />},
+        { path: "/cart/contact", element: <CartContact />},
+        { path: "/cart/completion", element: <CartCompletion />},
       ],
     },
   ]);

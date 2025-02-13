@@ -7,14 +7,14 @@ import { BsCashCoin } from "react-icons/bs";
 
 function CartContact() {
     const navigate = useNavigate();
-    const [cartItems, setCartItems] = useState();
+    const [cartItems, setCartItems] = useState([]);
     const [formData, setFormData] = useState({
         fullName: "",
         phoneNumber: "",
         paymentMethod: "cash",
     });
     const [selectedAddress, setSelectedAddress] = useState(null);
-    const [addresses, setAddresses] = useState();
+    const [addresses, setAddresses] = useState([]);
     const SHIPPING_FEE = 20000;
 
     useEffect(() => {
@@ -25,9 +25,11 @@ function CartContact() {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 });
-                setCartItems(response.data);
+                console.log("Cart API Response:", response.data);
+                setCartItems(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
                 console.error("Error fetching cart items:", error);
+                setCartItems([]); // Ensure it's always an array
             }
         };
 
@@ -38,18 +40,25 @@ function CartContact() {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 });
-                setAddresses(response.data);
+                console.log("Addresses API Response:", response.data);
+                if (Array.isArray(response.data)) {
+                    setAddresses(response.data);
+                } else {
+                    console.error("Unexpected response format:", response.data);
+                    setAddresses([]); // Fallback to empty array
+                }
                 if (response.data.length > 0) {
-                    setSelectedAddress(response.data._id);
+                    setSelectedAddress(response.data[0]._id);
                 }
             } catch (error) {
                 console.error("Error fetching addresses:", error);
+                setAddresses([]);
             }
         };
 
         fetchCartItems();
         fetchAddresses();
-    },);
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -117,78 +126,11 @@ function CartContact() {
 
     return (
         <div>
-            <Header />
             <div className="cart-contact container mx-auto mt-10">
-                <h2 className="text-2xl font-bold mb-5">Cart Contact</h2>
 
                 <div className="cart-content grid grid-cols-12 gap-8">
-                    <div className="col-span-8">
-                        <h3 className="text-xl font-bold mb-4">Cart Details</h3>
-                        <div className="bg-gray-100 p-4 rounded">
-                            <ul>
-                                {cartItems.map((item) => (
-                                    <li key={item._id} className="border-b py-4">
-                                        <div className="cart-item flex items-center">
-                                            <img
-                                                src={item.product.image}
-                                                alt={item.product.name}
-                                                className="w-20 h-20 object-cover mr-4"
-                                            />
-                                            <div>
-                                                <h3 className="text-lg font-medium">
-                                                    {item.product.name}
-                                                </h3>
-                                                <p className="text-gray-600">
-                                                    Price: ${item.product.price}
-                                                </p>
-                                                <p className="text-gray-800 font-medium mt-2">
-                                                    Quantity: {item.quantity}
-                                                </p>
-                                                <p className="text-gray-800 font-medium mt-2">
-                                                    Total:{" "}
-                                                    {calculateTotalPrice(item).toLocaleString("vi-VN", {
-                                                        style: "currency",
-                                                        currency: "VND",
-                                                    })}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className="flex justify-between mb-2 mt-2">
-                                <span>{cartItems.length} Items:</span>
-                                <span>
-                                    {calculateGrandTotal().toLocaleString("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
-                                </span>
-                            </div>
-                            <div className="flex justify-between mb-2">
-                                <span>Shipping:</span>
-                                <span>
-                                    {SHIPPING_FEE.toLocaleString("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
-                                </span>
-                            </div>
-                            <hr className="my-2" />
-                            <div className="flex justify-between font-bold">
-                                <span>Total:</span>
-                                <span>
-                                    {calculateTotalWithShipping().toLocaleString("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-span-4">
-                        <h3 className="text-xl font-bold mb-4">Contact Details</h3>
+                    <div className="col-span-9"> {/* Contact Details - Now takes 6 columns */}
+                        <h3 className="text-xl font-bold mb-4">BILLING DETAILs</h3>
                         <form onSubmit={handleSubmit} className="bg-gray-100 p-4 rounded">
                             <div className="mb-4">
                                 <label
@@ -239,11 +181,15 @@ function CartContact() {
                                     className="border border-gray-400 p-2 w-full rounded"
                                     required
                                 >
-                                    {addresses.map((address) => (
-                                        <option key={address._id} value={address._id}>
-                                            {address.street}, {address.city}, {address.country}
-                                        </option>
-                                    ))}
+                                    {Array.isArray(addresses) && addresses.length > 0 ? (
+                                        addresses.map((address) => (
+                                            <option key={address._id} value={address._id}>
+                                                {address.street}, {address.city}, {address.country}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        <option disabled>No addresses available</option>
+                                    )}
                                 </select>
                             </div>
 
@@ -262,27 +208,56 @@ function CartContact() {
                                     <BsCashCoin className="text-xl mr-2" /> Cash
                                 </label>
                             </div>
+                        </form>
+                    </div>
 
-                            <div className="flex justify-between">
-                                <Link to="/cart">
-                                    <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
-                                        &lt; Return to Cart
-                                    </button>
-                                </Link>
+                    <div className="col-span-3"> {/* Summary - Now takes 6 columns */}
+                        <h3 className="text-xl font-bold mb-4">Your Cart</h3>
+                        <div className="bg-gray-100 p-4 rounded">
+                        <div className="flex justify-between mb-2 mt-2">
+                                <span>{cartItems.length} Items:</span>
+                                <span>
+                                    {calculateGrandTotal().toLocaleString("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                    })}
+                                </span>
+                            </div>
+                            <div className="flex justify-between mb-2">
+                                <span>Shipping:</span>
+                                <span>
+                                    {SHIPPING_FEE.toLocaleString("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                    })}
+                                </span>
+                            </div>
+                            <hr className="my-2" />
+                            <div className="flex justify-between font-bold">
+                                <span>Total:</span>
+                                <span>
+                                    {calculateTotalWithShipping().toLocaleString("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                    })}
+                                </span>
+                            </div>
+
+                            <div className="mt-4 flex justify-center">
                                 <button
                                     type="submit"
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
                                 >
-                                    Submit Order
+                                    Checkout
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
+
 }
 
 export default CartContact;

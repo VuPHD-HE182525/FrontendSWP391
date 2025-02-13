@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Header from '../Header'; // Import the Header component
 import Footer from '../Footer'; // Import the Footer component
@@ -12,23 +12,36 @@ function CartDetails() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        let isMounted = true; // Prevent state update if component is unmounted
+        setIsLoading(true);
+
         const fetchCartItems = async () => {
             try {
                 const response = await axios.get('/api/cart', {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`, // Include token in header
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
                     }
                 });
-                setCartItems(response.data);
+
+                if (isMounted) {
+                    setCartItems(Array.isArray(response.data) ? response.data : []);
+                    setIsLoading(false);
+                }
             } catch (error) {
-                setError(error);
-            } finally {
-                setIsLoading(false);
+                if (isMounted) {
+                    setError(error);
+                    setIsLoading(false);
+                }
             }
         };
 
         fetchCartItems();
-    },);
+
+        return () => {
+            isMounted = false; // Cleanup function to avoid memory leaks
+        };
+    }, []); // Empty dependency array ensures this runs only once
+    
 
     const handleQuantityChange = async (itemId, newQuantity) => {
         try {
@@ -66,20 +79,18 @@ function CartDetails() {
         }
     };
 
-    const calculateTotalPrice = (item) => {
-        return item.product.price * item.quantity;
-    };
+    const calculateTotalPrice = (item) => item.product.price * item.quantity;
 
-    const calculateGrandTotal = () => {
-        return cartItems.reduce(
-            (total, item) => total + calculateTotalPrice(item),
-            0,
-        );
-    };
-    
-    const calculateTotalWithShipping = () => {
-        return calculateGrandTotal() + SHIPPING_FEE;
-      };
+    const grandTotal = useMemo(() => {
+        if (Array.isArray(cartItems)) { // Check if cartItems is an array
+            return cartItems.reduce((total, item) => total + calculateTotalPrice(item), 0);
+        }
+        return 0; // Return 0 if cartItems is not an array yet
+    }, [cartItems]);
+
+    const totalWithShipping = useMemo(() => {
+        return grandTotal + SHIPPING_FEE
+    }, [grandTotal])
     
 
     if (isLoading) {
@@ -92,15 +103,22 @@ function CartDetails() {
 
     return (
         <div>
-            <Header /> {/* Include the Header */}
             <div className="cart-details container mx-auto mt-10">
-                <h2 className="text-2xl font-bold mb-5">SHOPPING CART</h2> {/* Updated title */}
+                <h2 className="text-2xl font-bold mb-5">Your Cart</h2> {/* Updated title */}
+                <h3 className="text-l mb-5">There are {cartItems.length} products in your cart</h3>
+                {cartItems.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-48"> {/* Centered layout */}
+                        <p className="text-lg mb-4">Your Cart is currently empty.</p>
+                        <Link to="/products">
+                            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                Continue Shopping
+                            </button>
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="cart-content grid grid-cols-12 gap-8"> {/* Grid layout */}
+                        <div className="col-span-8"> {/* Left column */}
 
-                <div className="cart-content grid grid-cols-12 gap-8"> {/* Grid layout */}
-                    <div className="col-span-8"> {/* Left column */}
-                        {cartItems.length === 0 ? (
-                            <p>Your cart is empty.</p>
-                        ) : (
                             <ul>
                                 {cartItems.map((item) => (
                                     <li key={item._id} className="border-b py-4">
@@ -133,7 +151,7 @@ function CartDetails() {
                                                     <button
                                                         onClick={() => handleRemoveFromCart(item._id)}
                                                         className="text-red-500 ml-4">
-                                                        <AiOutlineDelete /> {/* Use the delete icon */}
+                                                        <AiOutlineDelete />
                                                     </button>
                                                 </div>
                                                 <p className="text-gray-800 font-medium mt-2">
@@ -144,40 +162,40 @@ function CartDetails() {
                                     </li>
                                 ))}
                             </ul>
-                        )}
-                        <Link to="/products"> {/* "Continue Shopping" link */}
-                            <button className="mt-5 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
-                                &lt; Continue Shopping
-                            </button>
-                        </Link>
-                    </div>
 
-                    <div className="col-span-4"> {/* Right column */}
-                        <h3 className="text-xl font-bold mb-4">CART TOTAL</h3>
-                        <div className="bg-gray-100 p-4 rounded">
-                            <div className="flex justify-between mb-2">
-                                <span>{cartItems.length} Items:</span>
-                                <span>{calculateGrandTotal().toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
-                            </div>
-                            <div className="flex justify-between mb-2">
-                                <span>Shipping:</span>
-                                <span>{SHIPPING_FEE.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span> {/* Placeholder for shipping cost */}
-                            </div>
-                            <hr className="my-2" />
-                            <div className="flex justify-between font-bold">
-                                <span>Total:</span>
-                                <span>{calculateTotalWithShipping().toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span> {/* Display grand total */}
-                            </div>
-                            <Link to="/cart/contact">
-                                <button className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    CHECK OUT
+                            <Link to="/products"> {/* "Continue Shopping" link */}
+                                <button className="mt-5 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
+                                    &lt; Continue Shopping
                                 </button>
                             </Link>
                         </div>
+
+                        <div className="col-span-4"> {/* Right column */}
+                            <h3 className="text-xl font-bold mb-4">CART TOTAL</h3>
+                            <div className="bg-gray-100 p-4 rounded">
+                                <div className="flex justify-between mb-2">
+                                    <span>{cartItems.length} Items:</span>
+                                    <span>{grandTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                                </div>
+                                <div className="flex justify-between mb-2">
+                                    <span>Shipping:</span>
+                                    <span>{SHIPPING_FEE.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span> {/* Placeholder for shipping cost */}
+                                </div>
+                                <hr className="my-2" />
+                                <div className="flex justify-between font-bold">
+                                    <span>Total:</span>
+                                    <span>{totalWithShipping.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span> {/* Display grand total */}
+                                </div>
+                                <Link to="/cart/contact">
+                                    <button className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        CHECK OUT
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
-            <Footer /> {/* Include the Footer */}
         </div>
         
     );
