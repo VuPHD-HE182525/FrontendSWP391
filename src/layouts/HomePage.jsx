@@ -18,7 +18,7 @@ export default function HomePage() {
     const context = useContext(MyContext);
 
     useEffect(() => {
-        fetchDataFromApi(`/api/product/getAllProductsByCatId/${context?.categoryData[1]?._id}`).then((res) => {
+        fetchDataFromApi(`/api/product/getAllProductsByCatId/${context?.categoryData[0]?._id}`).then((res) => {
             if (res?.error === false) {
                 setPopularProductsData(res?.products)
             }
